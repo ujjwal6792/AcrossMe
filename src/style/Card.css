@@ -10,18 +10,21 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  background: linear-gradient(#ee9ca740, #ffdde1);
 }
 
-.productCard-img img{
-    width: 200px;
+.productCard-img img {
+
+  margin-top: 30px;
+  width: 150px;
 }
 
 .productCard-info {
+  background-color: #292e4990;
   position: absolute;
-  width: 85%;
+  width: 100%;
   bottom: 0;
-  padding: 1rem;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -36,6 +39,7 @@
 }
 
 svg {
+    fill: rgba(255, 244, 169, 1);
   --size: 60px;
   width: var(--size);
   height: calc(var(--size) - (35px));
@@ -43,9 +47,14 @@ svg {
 
 /*Text*/
 .productCard-text p {
-    text-align: left;
+    padding-left: 1rem;
+  text-align: left;
   line-height: 140%;
-  background: linear-gradient(to right, #c04848, #480048);
+  background-image: radial-gradient(
+    circle 400px at 6.8% 8.3%,
+    rgba(255, 244, 169, 1) 0%,
+    rgba(255, 244, 234, 1) 100.2%
+  );
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -65,7 +74,7 @@ svg {
 
 /*Hover*/
 .productCard:hover {
-    background: transparent;
+  background: transparent;
   box-shadow: 0 10px 20px 4px #ffdde130;
 }
 

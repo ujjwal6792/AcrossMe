@@ -2,11 +2,11 @@ import React from "react";
 import "../style/Card.css";
 
 
-function Card({img, name, description}) {
+function Card({img, name, description, link,gradient}) {
   return(
   <div>
     <div className="productCard">
-      <div className="productCard-img"><img src={img} alt="" /></div>
+      <div className="productCard-img" style={{ "background": `${gradient}` }}><img src={img} alt=""  /></div>
       <div className="productCard-info">
         <div className="productCard-text">
           <p className="text-title">{name}</p>

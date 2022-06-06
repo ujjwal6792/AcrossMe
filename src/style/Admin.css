@@ -1,0 +1,75 @@
+.admin{
+    margin: 1rem ;
+}
+
+.adminInput {
+    padding: 2rem;
+    display: grid ;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    justify-content: center;
+    align-items: center;
+}
+
+.adminInput input {
+    border: 2px solid #c0906a;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    padding: 1rem;
+    color: azure;
+    background-color: #0b0a0e ;
+}
+
+.adminInput button {
+    height: 112px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: .5rem;
+    color: azure;
+    background-color: #0b0a0e ;
+    border: 2px solid #c0906a;
+}
+
+.adminInput button:hover {
+    color: #c0906a;
+    background-color: #ffffff10 ;
+    border: 2px solid #ffffff;
+}
+
+.adminInput input::file-selector-button{
+    border-radius: 5px;
+    padding: 1rem;
+    margin: .5rem;
+    background-color: #0b0a0e;
+    color: #c0906a;
+
+}
+
+.adminInput input::file-selector-button {
+
+    color: #c0906a;
+    background-color: #ffffff10 ;
+    border: 2px solid #ffffff;
+}
+
+#categories{
+    height: 112px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: .5rem;
+    color: azure;
+    background-color: #0b0a0e ;
+    border: 2px solid #c0906a;
+}
+
+.errorText{
+    font-size: 1.5rem;
+    color: #ff0000;
+}
+
+
+@media screen and (min-width= 480px) {
+    
+}
