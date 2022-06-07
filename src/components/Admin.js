@@ -118,15 +118,12 @@ function Admin() {
               placeholder="Password"
             />
 
-            <div className="loginButton">
-              <button
+              <button className="loginButton"
                 type="submit"
                 onClick={signIn}
-                className="login__signInButton"
               >
-                Sign In
+                SignIn
               </button>
-            </div>
           </form>
         </div>
       )}
@@ -217,7 +214,7 @@ function Admin() {
       <div className="colors">
         <Colors />
       </div>
-      )
+      
     </div>
   );
 }
