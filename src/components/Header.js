@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 import "../style/Header.css";
-// import SearchIcon from "@mui/icons-material/Search";
-// import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { Link } from "react-router-dom";
 import Logo from "../images/Logo.avif";
 

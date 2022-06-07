@@ -1,6 +1,23 @@
 .admin{
     margin: 1rem ;
 }
+.login form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 5rem 0 5rem 0;
+}
+.login input{
+    font-size: 1.5rem;
+    background-color: #0b0a0e ;
+    max-height: 4rem;
+    color: azure;
+    border: 2px solid #c0906a;
+    padding: 1rem;
+}
 
 .adminInput {
     padding: 2rem;
@@ -20,8 +37,7 @@
     background-color: #0b0a0e ;
 }
 
-.adminInput button {
-    height: 112px;
+ button {
     font-size: 1.5rem;
     border-radius: 5px;
     padding: 1rem;

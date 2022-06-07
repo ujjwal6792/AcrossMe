@@ -1,9 +1,36 @@
 import React, { useState, useEffect } from "react";
 import "../style/Admin.css";
-import { storage, db } from "./firebase";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, storage, db } from "./firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useStateValue } from "../context/StateProvider";
+import Colors from "./Colors";
 
 function Admin() {
+  //Login
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [{ user }] = useStateValue();
+  const navigate = useNavigate();
+
+  const signIn = (e) => {
+    e.preventDefault();
+
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((auth) => {
+        navigate("/admin");
+        console.log("logged in");
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  //   Log Out
+  const handleAuthenticaton = () => {
+    if (user) {
+      auth.signOut();
+    }
+  };
   // upload fields
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
@@ -16,9 +43,7 @@ function Admin() {
   //firebase message
   const [sucess, setSucess] = useState("");
   const [error, setError] = useState("");
-  const [progress, setProgress] = useState("");
   const [category, setCategory] = useState("");
-
   // image function
   const types = ["image/avif"];
   const handleImage = (e) => {
@@ -36,7 +61,7 @@ function Admin() {
   const handleUpload = (e) => {
     e.preventDefault();
     const file = image;
-    const storageRef = ref(storage, `websitelogo/${image.name}`);
+    const storageRef = ref(storage, `${category}/${image.name}`);
     const metadata = {
       contentType: "image/avif",
     };
@@ -45,14 +70,11 @@ function Admin() {
       "state_changed",
       (snapshot) => {
         console.log("Uploaded a blob or file!");
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setTimeout(setProgress(progress), 5000);
       },
       (error) => setError(error.message),
       () => {
         getDownloadURL(uploadImage.snapshot.ref).then((img) => {
-          db.collection("websites")
+          db.collection(category)
             .add({
               name,
               description,
@@ -78,81 +100,124 @@ function Admin() {
       }
     );
   };
-
   return (
     <div className="admin">
-      {sucess && (
-        <div className="errorText">
-          {sucess}
-          <br />
+      {!user && (
+        <div className="login">
+          <form>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
+
+            <div className="loginButton">
+              <button
+                type="submit"
+                onClick={signIn}
+                className="login__signInButton"
+              >
+                Sign In
+              </button>
+            </div>
+          </form>
         </div>
       )}
-      <form className="adminInput" onSubmit={handleUpload}>
-        <input
-          type="text"
-          placeholder="Name"
-          required
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          value={name}
-        />
-        <input
-          type="text"
-          placeholder="Link"
-          required
-          onChange={(e) => {
-            setLink(e.target.value);
-          }}
-          value={link}
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          required
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-          value={description}
-        />
-        <input
-          type="text"
-          placeholder="Gradient"
-          required
-          onChange={(e) => {
-            setGradient(e.target.value);
-          }}
-          value={gradient}
-        />
-        <input
-          type="file"
-          className="imageFile"
-          name="image"
-          id="imageFile"
-          onChange={handleImage}
-        />
-        <select name="categories" id="categories" onChange={(e)=>{setCategory(e.target.value)}}>
-          <option value="websitelogo">Shopping</option>
-          <option value="grocery">Grocery</option>
-          <option value="pharma">Pharmaceuticals</option>
-          <option value="travel">Travel</option>
-        </select>
-
-        <button type="submit">Add website</button>
-        {imageError && (
-          <>
-            <div className="errorText">{imageError}</div>
+      <div className="errorContainer">
+        {sucess && (
+          <div className="errorText">
+            {sucess}
             <br />
+          </div>
+        )}
+      </div>
+      {user && (
+        <form className="adminInput" onSubmit={handleUpload}>
+          <input
+            type="text"
+            placeholder="Name"
+            required
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            value={name}
+          />
+          <input
+            type="text"
+            placeholder="Link"
+            required
+            onChange={(e) => {
+              setLink(e.target.value);
+            }}
+            value={link}
+          />
+          <input
+            type="text"
+            placeholder="Description"
+            required
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+            value={description}
+          />
+          <input
+            type="text"
+            placeholder="Gradient"
+            required
+            onChange={(e) => {
+              setGradient(e.target.value);
+            }}
+            value={gradient}
+          />
+          <input
+            type="file"
+            className="imageFile"
+            name="image"
+            id="imageFile"
+            onChange={handleImage}
+          />
+          <select
+            name="categories"
+            id="categories"
+            onChange={(e) => {
+              setCategory(e.target.value);
+            }}
+          >
+            <option value="websitelogo">Shopping</option>
+            <option value="grocery">Grocery</option>
+            <option value="pharma">Pharmaceuticals</option>
+            <option value="travel">Travel</option>
+          </select>
+
+          <button type="submit">Add website</button>
+          <button  onClick={handleAuthenticaton}  >Log Out</button>
+          {imageError && (
+            <>
+              <div className="errorText">{imageError}</div>
+              <br />
+            </>
+          )}
+        </form>
+      )}
+      <div>
+        {error && (
+          <>
+            <br />
+            <div className="errotText">{error}</div>
           </>
         )}
-      </form>
-
-      {error && (
-        <>
-          <br />
-          <div className="errotText">{error}</div>
-        </>
-      )}
+      </div>
+      <div className="colors">
+        <Colors />
+      </div>
+      )
     </div>
   );
 }
