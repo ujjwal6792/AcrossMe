@@ -7,8 +7,7 @@ function Welcome() {
     <Link to = "/"  style={{ textDecoration: 'none' }} >
     <div className="welcome" >
       <p>Welcome to</p>
-      <h5>Unique </h5>
-      <h5> Handlooms</h5>
+      <h5>AcrossMe </h5>
     </div>
   </Link>
   )

@@ -4,10 +4,10 @@
 
 @media screen and (max-width: 960px){
 .welcome {
-    color: #273043;
+    color: #fffcf7;
     display: block;
     font-size: larger;
-    padding-top: 2rem;
+    padding-top: 1rem;
     padding-left: 1.2rem;
   }
 
@@ -18,7 +18,14 @@
   }
 
   .welcome h5 {
-    margin-top: -.9rem;
+    margin-top: 1.5rem;
+    line-height: 1rem;
     font-size: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .welcome{
+    padding-left: 2.2rem;
   }
 }

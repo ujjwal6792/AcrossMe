@@ -1,9 +1,12 @@
 import React from "react";
 import "../style/Home.css";
+import "../style/HomeMobile.css";
 import Card from "./Card";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import firebase from "./firebase";
+import Header from "./Header"
+
 
 // import amazon from "../images/icons/amazon2d.avif"
 // import flipkart from "../images/icons/flipkart2d.avif"
@@ -69,7 +72,7 @@ function Home() {
                   anchor.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
               >
-                <h2>pharmaceutical</h2>
+                <h2>Pharmacy</h2>
               </div>
             </div>
           </div>

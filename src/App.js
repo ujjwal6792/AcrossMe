@@ -6,6 +6,8 @@ import './App.css';
 import Home from "./components/Home";
 import Admin from "./components/Admin";
 import Header from "./components/Header"
+import Welcome from "./components/Welcome"
+
 
 function App() {
 
@@ -38,7 +40,7 @@ function App() {
           <Route
             path="/"
             exact
-            element={[ <Header/>, <Home />]}
+            element={[ <Header/>, <Welcome/>, <Home />]}
           />
         </Routes>
       </div>

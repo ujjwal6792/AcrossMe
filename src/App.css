@@ -7,3 +7,9 @@
     margin-right: auto;
 
 }
+
+@media screen and (max-width: 480px){
+    .app{
+        max-width: 480px;
+    }
+}

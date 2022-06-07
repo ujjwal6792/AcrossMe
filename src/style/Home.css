@@ -8,18 +8,17 @@
   background-image: url(../images/Hero.avif);
   background-repeat: no-repeat;
   background-size: contain;
+  margin: 0 auto;
 }
 
 .home img {
   max-width: 1440px;
-  position: relative;
   margin-left: auto;
   margin-right: auto;
 }
 
 .homeCenter {
   max-width: 1440px;
-  min-height: 976px;
   text-align: center;
 }
 
@@ -40,13 +39,12 @@
 }
 
 .homeCards {
-  max-height: 1440px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 5rem;
-  margin-top: -15rem;
+  margin-top: 5rem;
 }
 
 .box {
@@ -181,9 +179,8 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-  min-height: 200px;
   justify-content: center;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 .content1 h3 {
   word-wrap: break-word;
