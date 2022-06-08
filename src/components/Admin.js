@@ -31,6 +31,8 @@ function Admin() {
       auth.signOut();
     }
   };
+  // color
+  const [formColor, setFormColor] = useState("");
   // upload fields
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
@@ -100,6 +102,10 @@ function Admin() {
       }
     );
   };
+  const pull_data = (data) => {
+    setFormColor(data)
+  }
+
   return (
     <div className="admin">
       {!user && (
@@ -169,9 +175,9 @@ function Admin() {
             placeholder="Gradient"
             required
             onChange={(e) => {
-              setGradient(e.target.value);
+              setGradient(formColor);
             }}
-            value={gradient}
+            value={formColor}
           />
           <input
             type="file"
@@ -187,7 +193,8 @@ function Admin() {
               setCategory(e.target.value);
             }}
           >
-            <option value="websitelogo">Shopping</option>
+            <option value="">Choose Category</option>
+            <option value="Shopping">Shopping</option>
             <option value="grocery">Grocery</option>
             <option value="pharma">Pharmaceuticals</option>
             <option value="travel">Travel</option>
@@ -212,7 +219,7 @@ function Admin() {
         )}
       </div>
       <div className="colors">
-        <Colors />
+        <Colors color ={pull_data}/>
       </div>
       
     </div>

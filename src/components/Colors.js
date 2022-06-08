@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "../style/Color.css";
 
-export default function Colors() {
+export default function Colors(props) {
   const [copyColor, setCopyColor] = useState("");
+  props.color(copyColor);
 
   return (
     <div className="colorSection">
