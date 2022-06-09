@@ -3,8 +3,11 @@ import "../style/Admin.css";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, storage, db } from "./firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, updateDoc, deleteField, deleteDoc } from "firebase/firestore";
 import { useStateValue } from "../context/StateProvider";
 import Colors from "./Colors";
+import firebase from "./firebase";
+
 
 function Admin() {
   //Login
@@ -31,8 +34,6 @@ function Admin() {
       auth.signOut();
     }
   };
-  // color
-  const [formColor, setFormColor] = useState("");
   // upload fields
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
@@ -70,9 +71,7 @@ function Admin() {
     const uploadImage = uploadBytesResumable(storageRef, file, metadata);
     uploadImage.on(
       "state_changed",
-      (snapshot) => {
-        console.log("Uploaded a blob or file!");
-      },
+      (snapshot) => { console.log(snapshot) },
       (error) => setError(error.message),
       () => {
         getDownloadURL(uploadImage.snapshot.ref).then((img) => {
@@ -102,9 +101,56 @@ function Admin() {
       }
     );
   };
+    // edit and delete
+  const [deleteCategory, setDeleteCategory] = useState("");
+    const editDb = () => {
+
+    };
+    const deleteDb = (e,id, cat ) => {
+      e.preventDefault();
+      const deleteRef = doc(db,cat , id)
+    deleteDoc(deleteRef)
+    setSucess("Website Deleted")
+    setTimeout(() => {
+      setSucess("");
+    }, 5000);
+    }
+  // websitelist
+  const [shopping, setShopping] = useState([]);
+  const [grocery, setGrocery] = useState([]);
+  const [travel, setTravel] = useState([]);
+  const [pharma, setPharma] = useState([]);
+  const shoppingRef = firebase.firestore().collection("Shopping");
+  const groceryRef = firebase.firestore().collection("grocery");
+  const travelRef = firebase.firestore().collection("travel");
+  const pharmaRef = firebase.firestore().collection("pharma");
+
+  useEffect(() => {
+    shoppingRef.get().then((collections) => {
+      setShopping(
+        collections.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    });
+    groceryRef.get().then((collections) => {
+      setGrocery(
+        collections.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+      travelRef.get().then((collections) => {
+        setTravel(
+          collections.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      });
+      pharmaRef.get().then((collections) => {
+        setPharma(
+          collections.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      });
+    });
+  }, [sucess]);
+  // gradient pull
   const pull_data = (data) => {
-    setFormColor(data)
-  }
+    setGradient(data);
+  };
 
   return (
     <div className="admin">
@@ -124,12 +170,9 @@ function Admin() {
               placeholder="Password"
             />
 
-              <button className="loginButton"
-                type="submit"
-                onClick={signIn}
-              >
-                SignIn
-              </button>
+            <button className="loginButton" type="submit" onClick={signIn}>
+              SignIn
+            </button>
           </form>
         </div>
       )}
@@ -175,9 +218,9 @@ function Admin() {
             placeholder="Gradient"
             required
             onChange={(e) => {
-              setGradient(formColor);
+              const a = e;
             }}
-            value={formColor}
+            value={gradient}
           />
           <input
             type="file"
@@ -201,7 +244,7 @@ function Admin() {
           </select>
 
           <button type="submit">Add website</button>
-          <button  onClick={handleAuthenticaton}  >Log Out</button>
+          <button onClick={handleAuthenticaton}>Log Out</button>
           {imageError && (
             <>
               <div className="errorText">{imageError}</div>
@@ -219,9 +262,98 @@ function Admin() {
         )}
       </div>
       <div className="colors">
-        <Colors color ={pull_data}/>
+        <Colors color={pull_data} />
       </div>
-      
+      <div className="adminEdit">
+        {user && (
+          <div className="webDetails">
+            {shopping.map((item) => (
+              <form key={item.id} className="adminCard">
+                <p style={{ background: item.gradient }}>
+                  {" "}
+                  <img
+                    src={item.img}
+                    alt=""
+                    style={{ height: "50px", width: "50px" }}
+                  />
+                </p>
+                <p>{item.name}</p>
+                <p className="dsc">{item.description}</p>
+                <p className="crudLink">
+                  {item.link}
+                </p>
+                <div className="crudButton">
+                  <button onClick={editDb}>edit</button>
+                  <button onClick={(e) =>{ deleteDb(e, item.id, "Shopping")}}>del</button>
+                </div>
+              </form>
+            ))}
+            {travel.map((item) => (
+              <form key={item.id} className="adminCard">
+                <p style={{ background: item.gradient }}>
+                  {" "}
+                  <img
+                    src={item.img}
+                    alt=""
+                    style={{ height: "50px", width: "50px" }}
+                  />
+                </p>
+                <p>{item.name}</p>
+                <p className="dsc">{item.description}</p>
+                <p className="crudLink">
+                  {item.link}
+                </p>
+                <div className="crudButton">
+                  <button onClick={editDb}>edit</button>
+                  <button onClick={(e) =>{ deleteDb(e, item.id, "travel")}}>del</button>
+                </div>
+              </form>
+            ))}
+            {grocery.map((item) => (
+              <form key={item.id} className="adminCard">
+                <p style={{ background: item.gradient }}>
+                  {" "}
+                  <img
+                    src={item.img}
+                    alt=""
+                    style={{ height: "50px", width: "50px" }}
+                  />
+                </p>
+                <p>{item.name}</p>
+                <p className="dsc">{item.description}</p>
+                <p className="crudLink">
+                  {item.link}
+                </p>
+                <div className="crudButton">
+                  <button onClick={editDb}>edit</button>
+                  <button onClick={(e) =>{ deleteDb(e, item.id, "grocery")}}>del</button>
+                </div>
+              </form>
+            ))}
+            {pharma.map((item) => (
+              <form key={item.id} className="adminCard">
+                <p style={{ background: item.gradient }}>
+                  {" "}
+                  <img
+                    src={item.img}
+                    alt=""
+                    style={{ height: "50px", width: "50px" }}
+                  />
+                </p>
+                <p>{item.name}</p>
+                <p className="dsc">{item.description}</p>
+                <p className="crudLink">
+                  {item.link}
+                </p>
+                <div className="crudButton">
+                  <button onClick={editDb}>edit</button>
+                  <button onClick={(e) =>{ deleteDb(e, item.id,"pharma")}}>del</button>
+                </div>
+              </form>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

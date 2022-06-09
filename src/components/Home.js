@@ -5,11 +5,7 @@ import Card from "./Card";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import firebase from "./firebase";
-import Header from "./Header";
 
-// import amazon from "../images/icons/amazon2d.avif"
-// import flipkart from "../images/icons/flipkart2d.avif"
-// import swiggy from "../images/icons/swiggy.avif"
 
 function Home() {
   const [shopping, setShopping] = useState([]);
