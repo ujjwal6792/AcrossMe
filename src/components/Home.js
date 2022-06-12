@@ -84,6 +84,21 @@ function Home() {
             <div
               className="content"
               onClick={() => {
+                const anchor = document.querySelector("#grocery");
+                anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+              }}
+            >
+              <h2>Grocery</h2>
+            </div>
+          </div>
+        </div>
+
+        <div className="homeCardsBox">
+          <div className="box">
+            <span></span>
+            <div
+              className="content"
+              onClick={() => {
                 const anchor = document.querySelector("#pharma");
                 anchor.scrollIntoView({ behavior: "smooth", block: "center" });
               }}

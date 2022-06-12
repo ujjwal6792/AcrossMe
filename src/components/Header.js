@@ -8,6 +8,11 @@ function Header() {
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+
+  const explore = () => {
+    const anchor = document.querySelector("#shopping");
+    anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
   
   return (
     <>
@@ -43,8 +48,12 @@ function Header() {
               <Link
                 to="/"
                 className="nav-links username"
-                onClick={closeMobileMenu}>
-                Hello
+                onClick={ () => {
+                  closeMobileMenu(); 
+                  explore();
+                }
+                  }>
+                Explore
               </Link>
               </li>
         </ul>

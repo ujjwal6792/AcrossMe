@@ -3,11 +3,10 @@ import "../style/Admin.css";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, storage, db } from "./firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, updateDoc, deleteField, deleteDoc } from "firebase/firestore";
+import { doc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { useStateValue } from "../context/StateProvider";
 import Colors from "./Colors";
 import firebase from "./firebase";
-
 
 function Admin() {
   //Login
@@ -24,6 +23,8 @@ function Admin() {
       .then((auth) => {
         navigate("/admin");
         console.log("logged in");
+        setEmail("");
+        setPassword("");
       })
       .catch((error) => alert(error.message));
   };
@@ -32,6 +33,8 @@ function Admin() {
   const handleAuthenticaton = () => {
     if (user) {
       auth.signOut();
+      setEmail("");
+      setPassword("");
     }
   };
   // upload fields
@@ -40,6 +43,8 @@ function Admin() {
   const [description, setDescription] = useState("");
   const [gradient, setGradient] = useState("");
   const [image, setImage] = useState(null);
+  const [id, setId] = useState("");
+  const [edit, setEdit] = useState(null);
 
   //image file extension check
   const [imageError, setImageError] = useState("");
@@ -60,61 +65,99 @@ function Admin() {
       console.log(name, link, description, gradient, image);
     }
   };
+
   //   file upload function
   const handleUpload = (e) => {
     e.preventDefault();
-    const file = image;
-    const storageRef = ref(storage, `${category}/${image.name}`);
-    const metadata = {
-      contentType: "image/avif",
-    };
-    const uploadImage = uploadBytesResumable(storageRef, file, metadata);
-    uploadImage.on(
-      "state_changed",
-      (snapshot) => { console.log(snapshot) },
-      (error) => setError(error.message),
-      () => {
-        getDownloadURL(uploadImage.snapshot.ref).then((img) => {
-          db.collection(category)
-            .add({
-              name,
-              description,
-              link,
-              gradient,
-              img,
-            })
-            .then(() => {
-              setSucess(`website added successfully`);
-              setDescription("");
-              setGradient("");
-              setLink("");
-              setName("");
-              document.getElementById(`imageFile`).value = "";
-              setError("");
-              setImageError("");
-              setTimeout(() => {
-                setSucess("");
-              }, 3000);
-            })
-            .catch((error) => setError(error.message));
+    if (!id) {
+      const file = image;
+      const storageRef = ref(storage, `${category}/${image.name}`);
+      const metadata = {
+        contentType: "image/avif",
+      };
+      const uploadImage = uploadBytesResumable(storageRef, file, metadata);
+      uploadImage.on(
+        "state_changed",
+        (snapshot) => {
+          console.log(snapshot);
+        },
+        (error) => setError(error.message),
+        () => {
+          getDownloadURL(uploadImage.snapshot.ref).then((img) => {
+            db.collection(category)
+              .add({
+                name,
+                description,
+                link,
+                gradient,
+                img,
+              })
+              .then(() => {
+                setSucess(`website added successfully`);
+                setDescription("");
+                setGradient("");
+                setLink("");
+                setName("");
+                document.getElementById(`imageFile`).value = "";
+                setError("");
+                setImageError("");
+                setTimeout(() => {
+                  setSucess("");
+                }, 3000);
+              })
+              .catch((error) => setError(error.message));
+          });
+        }
+      );
+    } else {
+      try {
+        updateDoc(doc(db, category, id), {
+          name,
+          link,
+          gradient,
+          description,
         });
+        setEdit(true)
+        setSucess(`website edited successfully`);
+        setDescription("");
+        setGradient("");
+        setLink("");
+        setName("");
+        document.getElementById(`imageFile`).value = "";
+        setError("");
+        setImageError("");
+        setTimeout(() => {
+          setSucess("");
+        }, 3000);
+      } catch {
+        console.log(`err`);
       }
-    );
-  };
-    // edit and delete
-  const [deleteCategory, setDeleteCategory] = useState("");
-    const editDb = () => {
-
-    };
-    const deleteDb = (e,id, cat ) => {
-      e.preventDefault();
-      const deleteRef = doc(db,cat , id)
-    deleteDoc(deleteRef)
-    setSucess("Website Deleted")
-    setTimeout(() => {
-      setSucess("");
-    }, 5000);
     }
+  };
+  // edit and delete
+  const editDb = async (e, id, cat) => {
+    e.preventDefault();
+    const editRef = doc(db, cat, id);
+    const snapshot = await getDoc(editRef);
+    let editdata = { ...snapshot.data(), id: snapshot.id };
+    setId(editdata.id);
+    setName(editdata.name);
+    setGradient(editdata.gradient);
+    setLink(editdata.link);
+    setDescription(editdata.description);
+  };
+
+  const deleteDb = (e, id, cat) => {
+    e.preventDefault();
+    const deleteRef = doc(db, cat, id);
+    if (window.confirm("Are you sure?")) {
+      deleteDoc(deleteRef);
+      setSucess("Website Deleted");
+      setTimeout(() => {
+        setSucess("");
+      }, 5000);
+    }
+  };
   // websitelist
   const [shopping, setShopping] = useState([]);
   const [grocery, setGrocery] = useState([]);
@@ -146,7 +189,7 @@ function Admin() {
         );
       });
     });
-  }, [sucess]);
+  }, [sucess, edit]);
   // gradient pull
   const pull_data = (data) => {
     setGradient(data);
@@ -217,9 +260,7 @@ function Admin() {
             type="text"
             placeholder="Gradient"
             required
-            onChange={(e) => {
-              const a = e;
-            }}
+            onChange={(e) => e.target.value}
             value={gradient}
           />
           <input
@@ -279,12 +320,22 @@ function Admin() {
                 </p>
                 <p>{item.name}</p>
                 <p className="dsc">{item.description}</p>
-                <p className="crudLink">
-                  {item.link}
-                </p>
+                <p className="crudLink">{item.link}</p>
                 <div className="crudButton">
-                  <button onClick={editDb}>edit</button>
-                  <button onClick={(e) =>{ deleteDb(e, item.id, "Shopping")}}>del</button>
+                  <button
+                    onClick={(e) => {
+                      editDb(e, item.id, "Shopping");
+                    }}
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      deleteDb(e, item.id, "Shopping");
+                    }}
+                  >
+                    del
+                  </button>
                 </div>
               </form>
             ))}
@@ -300,12 +351,22 @@ function Admin() {
                 </p>
                 <p>{item.name}</p>
                 <p className="dsc">{item.description}</p>
-                <p className="crudLink">
-                  {item.link}
-                </p>
+                <p className="crudLink">{item.link}</p>
                 <div className="crudButton">
-                  <button onClick={editDb}>edit</button>
-                  <button onClick={(e) =>{ deleteDb(e, item.id, "travel")}}>del</button>
+                  <button
+                    onClick={(e) => {
+                      editDb(e, item.id, "travel");
+                    }}
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      deleteDb(e, item.id, "travel");
+                    }}
+                  >
+                    del
+                  </button>
                 </div>
               </form>
             ))}
@@ -321,12 +382,22 @@ function Admin() {
                 </p>
                 <p>{item.name}</p>
                 <p className="dsc">{item.description}</p>
-                <p className="crudLink">
-                  {item.link}
-                </p>
+                <p className="crudLink">{item.link}</p>
                 <div className="crudButton">
-                  <button onClick={editDb}>edit</button>
-                  <button onClick={(e) =>{ deleteDb(e, item.id, "grocery")}}>del</button>
+                  <button
+                    onClick={(e) => {
+                      editDb(e, item.id, "grocery");
+                    }}
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      deleteDb(e, item.id, "grocery");
+                    }}
+                  >
+                    del
+                  </button>
                 </div>
               </form>
             ))}
@@ -342,12 +413,22 @@ function Admin() {
                 </p>
                 <p>{item.name}</p>
                 <p className="dsc">{item.description}</p>
-                <p className="crudLink">
-                  {item.link}
-                </p>
+                <p className="crudLink">{item.link}</p>
                 <div className="crudButton">
-                  <button onClick={editDb}>edit</button>
-                  <button onClick={(e) =>{ deleteDb(e, item.id,"pharma")}}>del</button>
+                  <button
+                    onClick={(e) => {
+                      editDb(e, item.id, "pharma");
+                    }}
+                  >
+                    edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      deleteDb(e, item.id, "pharma");
+                    }}
+                  >
+                    del
+                  </button>
                 </div>
               </form>
             ))}

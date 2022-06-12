@@ -16,6 +16,7 @@
     margin: 5rem 0 5rem 0;
 }
 .login input{
+    border-radius: 5px;
     font-size: 1.2rem;
     background-color: #0b0a0e ;
     max-height: 4rem;
