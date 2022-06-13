@@ -89,7 +89,6 @@
   }
   .navbar {
     background: transparent;
-    /* height: fit-content; */
     padding-bottom: 1rem;
     display: flex;
     justify-content: left;
@@ -101,19 +100,21 @@
   .nav-menu {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100vw;
     height: 100vh;
     position: absolute;
-    top: 0px;
+    top: 20px;
     left: -100%;
     opacity: 1;
     transition: all 0.5s ease;
     z-index: 1000;
-    justify-content: center;
+    justify-content:flex-start;
     align-items: center;
   }
 
   .nav-menu.active {
+    padding: 0;
+    margin: 0;
     background: #0f131a;
     left: 0;
     transition: all 0.5s ease;
