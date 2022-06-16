@@ -27,7 +27,7 @@ function Header() {
         <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li className="nav-item X">
                 <Link to="" className="nav-links x" onClick={closeMobileMenu}>
-                  X
+                  Go Back
                 </Link>
               </li>
               <li className="nav-item">

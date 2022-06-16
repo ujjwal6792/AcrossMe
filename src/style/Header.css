@@ -105,11 +105,11 @@
     position: absolute;
     top: 20px;
     left: -100%;
+    font-size: 3rem;
     opacity: 1;
     transition: all 0.5s ease;
     z-index: 1000;
-    justify-content:flex-start;
-    align-items: center;
+    justify-content:center;
   }
 
   .nav-menu.active {
@@ -123,21 +123,18 @@
   }
 
   .X {
-    margin-top: 1rem;
-    display: block;
-
+    width: max-content;
+    margin: 0 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: left;
   }
   .x {
     border-radius: 4px;
     border: none;
-    background-color: #3d405b;
     width: fit-content;
-    padding: 0 10px;
     cursor: pointer;
-    padding: 5px 10px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffffff;
+    padding: 15px;
   }
 
 .userauth {
@@ -171,9 +168,9 @@
     display: block;
     position: absolute;
     top: 0rem;
-    left: 5rem;
+    left: 4.5rem;
     transform: translate(-100%, 60%);
-    font-size: 3rem;
+    font-size: 2.7rem;
     cursor: pointer;
   }
 
