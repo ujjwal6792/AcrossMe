@@ -1,3 +1,19 @@
+#shopping{
+  scroll-margin-top: -250px;
+}
+
+#travel{
+  scroll-margin-top: -250px;
+}
+
+#pharma{
+  scroll-margin-top: -250px;
+}
+
+#groceries{
+  scroll-margin-top: -250px;
+}
+
 .home {
   display: flex;
   flex-direction: column;
@@ -13,6 +29,8 @@
 
 .home img {
   max-width: 1440px;
+  max-width: 200px;
+  max-height: 200px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -188,7 +206,7 @@
   margin: 10rem 5% 1rem 5%;
 }
 
-.content1 p {
+.cheesyP {
   font-size: 1rem;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../style/Admin.css";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { auth, storage, db } from "./firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
@@ -22,7 +22,6 @@ function Admin() {
       .signInWithEmailAndPassword(email, password)
       .then((auth) => {
         navigate("/admin");
-        console.log("logged in");
         setEmail("");
         setPassword("");
       })
@@ -45,6 +44,7 @@ function Admin() {
   const [image, setImage] = useState(null);
   const [id, setId] = useState("");
   const [edit, setEdit] = useState(null);
+  const [editset, setEditSet] = useState(null);
 
   //image file extension check
   const [imageError, setImageError] = useState("");
@@ -136,6 +136,7 @@ function Admin() {
   };
   // edit and delete
   const editDb = async (e, id, cat) => {
+    setEditSet(true)
     e.preventDefault();
     const editRef = doc(db, cat, id);
     const snapshot = await getDoc(editRef);
@@ -163,11 +164,13 @@ function Admin() {
   const [grocery, setGrocery] = useState([]);
   const [travel, setTravel] = useState([]);
   const [pharma, setPharma] = useState([]);
+  const [topDeals, setTopDeals] = useState([]);
   const shoppingRef = firebase.firestore().collection("Shopping");
   const groceryRef = firebase.firestore().collection("grocery");
   const travelRef = firebase.firestore().collection("travel");
   const pharmaRef = firebase.firestore().collection("pharma");
-
+  const topDealsRef = firebase.firestore().collection("topDeals");
+// Display Items
   useEffect(() => {
     shoppingRef.get().then((collections) => {
       setShopping(
@@ -188,8 +191,13 @@ function Admin() {
           collections.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
         );
       });
+      topDealsRef.get().then((collections) => {
+        setTopDeals(
+          collections.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      });
     });
-  }, [sucess, edit]);
+  }, [sucess, edit, topDeals]);
   // gradient pull
   const pull_data = (data) => {
     setGradient(data);
@@ -282,9 +290,10 @@ function Admin() {
             <option value="grocery">Grocery</option>
             <option value="pharma">Pharmaceuticals</option>
             <option value="travel">Travel</option>
+            <option value="topDeals">TopDeals</option>
           </select>
-
-          <button type="submit">Add website</button>
+            console.log(edit)
+          <button type="submit"> { editset? "Edit Website" : "Add website"}</button>
           <button onClick={handleAuthenticaton}>Log Out</button>
           {imageError && (
             <>
@@ -339,6 +348,7 @@ function Admin() {
                 </div>
               </form>
             ))}
+
             {travel.map((item) => (
               <form key={item.id} className="adminCard">
                 <p style={{ background: item.gradient }}>

@@ -2,9 +2,9 @@ import React from "react";
 import "../style/Home.css";
 import "../style/HomeMobile.css";
 import Card from "./Card";
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import firebase from "./firebase";
+import TopDeals from "./TopDeals";
 
 
 function Home() {
@@ -111,7 +111,10 @@ function Home() {
 
       <div className="content1">
         <h3>A Shopping platform that invests in you</h3>
-        <p>We bring your favourite shopping portals right under fingertips</p>
+        <p className="cheesyP">We bring your favourite shopping portals right under fingertips</p>
+        <div className="topDealsSection">
+          <TopDeals/>
+        </div>
         <button
           onClick={() => {
             const anchor = document.querySelector("#travel");
@@ -126,14 +129,17 @@ function Home() {
         <h3 id="shopping">Shopping</h3>
         <div className="productCards">
           {shopping.map((item) => (
-            <Card
-              key={item.id}
-              img={item.img}
-              name={item.name}
-              description={item.description}
-              link={item.link}
-              gradient={item.gradient}
-            />
+            <a href = {item.link} target="_blank">
+            {/* <div   onClick={()=>{  window.location.replace(`${item.link}`)}}> */}
+              <Card
+                key={item.id}
+                img={item.img}
+                name={item.name}
+                description={item.description}
+                gradient={item.gradient}
+              />
+           {/* </div> */}
+            </a>
           ))}
         </div>
       </div>
