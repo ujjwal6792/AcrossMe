@@ -9,6 +9,11 @@ import Colors from "./Colors";
 import firebase from "./firebase";
 
 function Admin() {
+  // color
+    const pull_data = (data) => {
+      setGradient(data);
+    };
+  
   //Login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -79,7 +84,7 @@ function Admin() {
       uploadImage.on(
         "state_changed",
         (snapshot) => {
-          console.log(snapshot);
+         return snapshot;
         },
         (error) => setError(error.message),
         () => {
@@ -197,11 +202,7 @@ function Admin() {
         );
       });
     });
-  }, [sucess, edit, topDeals]);
-  // gradient pull
-  const pull_data = (data) => {
-    setGradient(data);
-  };
+  }, [sucess, edit]);
 
   return (
     <div className="admin">
@@ -292,9 +293,9 @@ function Admin() {
             <option value="travel">Travel</option>
             <option value="topDeals">TopDeals</option>
           </select>
-            console.log(edit)
           <button type="submit"> { editset? "Edit Website" : "Add website"}</button>
           <button onClick={handleAuthenticaton}>Log Out</button>
+         
           {imageError && (
             <>
               <div className="errorText">{imageError}</div>
@@ -312,7 +313,7 @@ function Admin() {
         )}
       </div>
       <div className="colors">
-        <Colors color={pull_data} />
+       <Colors color={pull_data} />
       </div>
       <div className="adminEdit">
         {user && (

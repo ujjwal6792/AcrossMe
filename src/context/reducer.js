@@ -34,8 +34,10 @@ export const initialState = {
           ...state,
           user: action.user,
         };
-      default:
-        return state;
+
+
+
+      default: return state;
     }
   };
   
